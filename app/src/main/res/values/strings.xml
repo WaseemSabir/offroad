@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Off Road</string>
+    <string name="center_map">Center Map to Location</string>
+    <string name="loading_profile_error">Error while loading profile</string>
+    <string name="open_drawer">Open Drawer</string>
+    <string name="navigation_view_header_title">Off Road</string>
+    <string name="no_data">No data</string>
+    <string name="loading">LOADING</string>
+    <string name="profile_title">Edit Profile</string>
+    <string name="refresh">Refresh</string>
+    <string name="menu_more">Menu More</string>
+    <string name="map_title">Map</string>
+</resources>
