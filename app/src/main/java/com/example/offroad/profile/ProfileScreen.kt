@@ -26,13 +26,23 @@ import com.google.accompanist.appcompattheme.AppCompatTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.DateRange
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import coil.compose.rememberImagePainter
 import coil.transform.CircleCropTransformation
 
@@ -77,14 +87,27 @@ private fun ProfileContent(
     var localPui by remember {
         mutableStateOf(
             ProfileUpdateInput(
-                imageUrl = profile?.imageUrl ?: "",
-                fullName = profile?.fullName ?: "",
-                email = profile?.email ?: "",
-                birthdayDate = profile?.birthdayDate ?: "",
-                phoneNumber = profile?.phoneNumber ?: "",
-                subscribed = profile?.subscribed ?: true
+                imageUrl = "",
+                fullName = "",
+                email = "",
+                birthdayDate = "",
+                phoneNumber = "",
+                subscribed = true
             )
         )
+    }
+
+    LaunchedEffect(profile) {
+        profile?.let {
+            localPui = ProfileUpdateInput(
+                imageUrl = it.imageUrl,
+                fullName = it.fullName,
+                email = it.email,
+                birthdayDate = it.birthdayDate,
+                phoneNumber = it.phoneNumber,
+                subscribed = it.subscribed
+            )
+        }
     }
 
     LoadingContent(
@@ -101,71 +124,78 @@ private fun ProfileContent(
                 painter = rememberImagePainter(
                     data = localPui.imageUrl,
                     builder = {
+                        placeholder(R.drawable.profile_picture_placeholder)
+                        error(R.drawable.profile_picture_placeholder)
                         transformations(CircleCropTransformation())
                     }
+
                 ),
                 contentDescription = "Profile Image",
-                modifier = Modifier.size(120.dp)
+                modifier = Modifier
+                    .size(140.dp)
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally)
+                    .padding(vertical = 4.dp)
             )
 
             // About Me Heading
             Text(
                 text = "About Me",
-                style = MaterialTheme.typography.h5,
-                modifier = Modifier.padding(top = 24.dp, bottom = 16.dp)
+                style = MaterialTheme.typography.h6.copy(fontWeight = FontWeight.W900),
+                modifier = Modifier
+                    .padding(top = 24.dp, bottom = 16.dp)
             )
 
             // Full Name Input
-            OutlinedTextField(
+            ProfileTextField(
+                label = "Full Name",
                 value = localPui.fullName,
-                onValueChange = { localPui = localPui.copy(fullName = it) },
-                label = { Text("Full Name") },
-                modifier = Modifier.fillMaxWidth()
+                onValueChange = { localPui = localPui.copy(fullName = it) }
             )
 
             // Birthday Picker
-            OutlinedTextField(
+            ProfileTextField(
+                label = "Birthday",
                 value = localPui.birthdayDate,
-                onValueChange = { localPui = localPui.copy(birthdayDate = it) },
-                label = { Text("Birthday") },
-                trailingIcon = {
-                    Icon(
-                        imageVector = Icons.Default.DateRange,
-                        contentDescription = "Pick Date",
-                    )
-                },
-                modifier = Modifier.fillMaxWidth()
+                onValueChange = { localPui = localPui.copy(fullName = it) },
+                trailingIcon = Icons.Default.DateRange,
+                trailingIconDesc = "Date Picker"
             )
 
             // Email Input
-            OutlinedTextField(
+            ProfileTextField(
+                label = "E-mail",
                 value = localPui.email,
-                onValueChange = { localPui = localPui.copy(email = it) },
-                label = { Text("E-mail") },
-                modifier = Modifier.fillMaxWidth()
+                onValueChange = { localPui = localPui.copy(email = it) }
             )
 
+
             // Phone Input
-            OutlinedTextField(
+            ProfileTextField(
+                label = "Phone",
                 value = localPui.phoneNumber,
-                onValueChange = { localPui = localPui.copy(phoneNumber = it) },
-                keyboardOptions = KeyboardOptions.Default.copy(keyboardType = KeyboardType.Phone),
-                modifier = Modifier.fillMaxWidth()
+                onValueChange = { localPui = localPui.copy(phoneNumber = it) }
             )
 
             // Newsletter Subscription Checkbox
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(top = 16.dp)
+                horizontalArrangement = Arrangement.Start,
+                modifier = Modifier
+                    .padding(all = 0.dp)
+                    .fillMaxWidth()
             ) {
                 Checkbox(
                     checked = localPui.subscribed,
-                    onCheckedChange = { localPui = localPui.copy(subscribed = it) }
+                    onCheckedChange = { localPui = localPui.copy(subscribed = it) },
+                    colors = CheckboxDefaults.colors(
+                        checkedColor = colorResource(id = R.color.colorPurple)
+                    ),
+                    modifier = Modifier.padding(all = 0.dp)
                 )
                 Text(
-                    text = "I want to subscribe to the newsletter",
-                    style = MaterialTheme.typography.body1,
-                    modifier = Modifier.padding(start = 8.dp)
+                    text = "I want to subscribe to the newsletter.",
+                    style = MaterialTheme.typography.body1.copy(fontWeight = FontWeight.Bold),
                 )
             }
 
@@ -175,11 +205,106 @@ private fun ProfileContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(top = 16.dp)
+                    .height(56.dp),
+                shape = RoundedCornerShape(8.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = colorResource(id = R.color.colorPurple),
+                    contentColor = colorResource(id = R.color.colorPrimary)
+                )
             ) {
                 Text("Save Changes")
             }
         }
     }
+}
+
+
+@Composable
+fun ProfileTextField(
+    label: String,
+    value: String,
+    onValueChange: (newVal: String) -> Unit,
+) {
+    Text(text = label, style = MaterialTheme.typography.body1)
+    BasicTextField(
+        value = value,
+        onValueChange = onValueChange,
+        singleLine = true,
+        textStyle = TextStyle(fontSize = 14.sp, color = LocalTextStyle.current.color),
+        cursorBrush = SolidColor(Color.Black),
+        decorationBox = { innerTextField ->
+            Box(
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.BackgroundOpacity),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 12.dp)
+            ) {
+                if (value.isEmpty()) {
+                    Text(
+                        label,
+                        style = TextStyle(color = Color.Gray, fontSize = 14.sp)
+                    )
+                }
+                innerTextField()  // This is where the actual TextField will be displayed
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 4.dp, bottom = 8.dp)
+    )
+}
+
+@Composable
+fun ProfileTextField(
+    label: String,
+    value: String,
+    onValueChange: (newVal: String) -> Unit,
+    trailingIcon: ImageVector,
+    trailingIconDesc: String
+) {
+    Text(text = label, style = MaterialTheme.typography.body1)
+    BasicTextField(
+        value = value,
+        onValueChange = onValueChange,
+        singleLine = true,
+        textStyle = TextStyle(fontSize = 14.sp, color = LocalTextStyle.current.color),
+        cursorBrush = SolidColor(Color.Black),
+        decorationBox = { innerTextField ->
+            Row(
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically,
+                modifier = Modifier
+                    .background(
+                        color = MaterialTheme.colors.onSurface.copy(alpha = TextFieldDefaults.BackgroundOpacity),
+                        shape = RoundedCornerShape(8.dp)
+                    )
+                    .padding(horizontal = 12.dp, vertical = 12.dp)
+            ) {
+                if (value.isEmpty()) {
+                    Text(
+                        label,
+                        style = TextStyle(color = Color.Gray, fontSize = 14.sp)
+                    )
+                }
+                innerTextField()  // This is where the actual TextField will be displayed
+                IconButton(
+                    onClick = { /* Define what happens when icon is clicked, e.g., open date picker */ },
+                    modifier = Modifier.size(18.dp)  // Adjust the size of the icon if necessary
+                ) {
+                    Icon(
+                        imageVector = trailingIcon,
+                        contentDescription = trailingIconDesc,
+                        tint = MaterialTheme.colors.onSurface
+                    )
+                }
+            }
+        },
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(top = 4.dp, bottom = 8.dp)
+    )
 }
 
 @Preview

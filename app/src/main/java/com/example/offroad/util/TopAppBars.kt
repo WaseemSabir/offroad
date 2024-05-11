@@ -29,7 +29,7 @@ import com.google.accompanist.appcompattheme.AppCompatTheme
 @Composable
 fun MapTopAppBar(
     openDrawer: () -> Unit,
-    onRefresh: () -> Unit
+    onMapReset: () -> Unit
 ) {
     TopAppBar(
         title = { Text(text = stringResource(id = R.string.app_name)) },
@@ -39,7 +39,7 @@ fun MapTopAppBar(
             }
         },
         actions = {
-            MoreTasksMenu(onRefresh)
+            MoreTasksMenu(onMapReset)
         },
         modifier = Modifier.fillMaxWidth()
     )
@@ -47,15 +47,15 @@ fun MapTopAppBar(
 
 @Composable
 private fun MoreTasksMenu(
-    onRefresh: () -> Unit
+    onMapReset: () -> Unit
 ) {
     TopAppBarDropdownMenu(
         iconContent = {
             Icon(Icons.Filled.MoreVert, stringResource(id = R.string.menu_more))
         }
     ) { closeMenu ->
-        DropdownMenuItem(onClick = { onRefresh(); closeMenu() }) {
-            Text(text = stringResource(id = R.string.refresh))
+        DropdownMenuItem(onClick = { onMapReset(); closeMenu() }) {
+            Text(text = stringResource(id = R.string.reset_map))
         }
     }
 }

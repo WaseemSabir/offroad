@@ -3,6 +3,9 @@
     package="com.example.offroad">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+
     <application
         android:name="com.example.offroad.Application"
         android:icon="@mipmap/ic_launcher"

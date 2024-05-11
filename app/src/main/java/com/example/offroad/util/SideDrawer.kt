@@ -3,6 +3,7 @@ package com.example.offroad.util
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -98,20 +99,15 @@ private fun AppDrawer(
 private fun DrawerHeader(
     modifier: Modifier = Modifier
 ) {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
+    Box(
         modifier = modifier
             .fillMaxWidth()
             .background(primaryDarkColor)
-            .height(dimensionResource(id = R.dimen.header_height))
-            .padding(dimensionResource(id = R.dimen.header_padding))
+            .padding(
+                vertical = 16.dp,
+                horizontal = dimensionResource(id = R.dimen.horizontal_margin)
+            )
     ) {
-        Image(
-            painter = painterResource(id = R.drawable.logo_no_fill),
-            contentDescription = "App Logo",
-            modifier = Modifier.width(dimensionResource(id = R.dimen.header_image_width))
-        )
         Text(
             text = stringResource(id = R.string.navigation_view_header_title),
             color = MaterialTheme.colors.surface

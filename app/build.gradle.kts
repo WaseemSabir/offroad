@@ -113,6 +113,7 @@ dependencies {
     // Hilt
     implementation(libs.hilt.android.core)
     implementation(libs.androidx.hilt.navigation.compose)
+    implementation(libs.play.services.location)
     kapt(libs.hilt.compiler)
 
     // Jetpack Compose
@@ -132,6 +133,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.viewModelCompose)
     implementation(libs.accompanist.appcompat.theme)
     implementation(libs.accompanist.swiperefresh)
+    implementation("org.maplibre.gl:android-sdk:11.0.0")
+    implementation("com.google.accompanist:accompanist-permissions:0.24.13-rc")
+
 
     debugImplementation(composeBom)
     debugImplementation(libs.androidx.compose.ui.tooling.core)

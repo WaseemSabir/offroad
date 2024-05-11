@@ -14,7 +14,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.offroad.profile.ProfileScreen
-import com.example.offroad.tasks.MapScreen
+import com.example.offroad.map.MapScreen
 import com.example.offroad.util.AppModalDrawer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
